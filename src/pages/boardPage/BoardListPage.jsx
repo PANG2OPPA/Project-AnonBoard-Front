@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Layout from '../../components/Layout';
 
 const Container = styled.div`
   display: flex;
@@ -48,7 +49,7 @@ const BoardListPage = () => {
   ];
 
   return (
-    <Container>
+    <Layout >
       <Title>게시판</Title>
       <Table>
         <TableHeader>
@@ -68,7 +69,7 @@ const BoardListPage = () => {
           ))}
         </tbody>
       </Table>
-    </Container>
+    </Layout>
   );
 };
 
