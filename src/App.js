@@ -6,6 +6,7 @@ import SignupPage from './pages/userPage/SignupPage';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './util/PrivateRoute';
 import BoardListPage from './pages/boardPage/BoardListPage';
+import WritePage from './pages/boardPage/BoardWritePage';
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
           <Route path="/" element={<SigninPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/boardlist" element={<PrivateRoute element={<BoardListPage />} />} />
+          <Route path="/write" element={<PrivateRoute element={<WritePage />} />} />
         </Routes>
       </Router>
     </AuthProvider>
@@ -23,3 +25,4 @@ const App = () => {
 };
 
 export default App;
+

@@ -25,6 +25,18 @@ const AxiosApi = {
   //아이디 중복 확인
   checkUserId: async (userId) => {
     return await axios.get(ANON_HOST + `/user/exists/${userId}`);
+  },
+
+  //게시판 페이지네이션
+  boardListByPage: async (page, size) => {
+      const response = await axios.get(`${ANON_HOST}/board/list/page?page=${page}&size=${size}`);
+      console.log('Response data:', response.data);
+      return response.data;
+  },
+
+  getTotalPages: async (size) => {
+      const response = await axios.get(`${ANON_HOST}/board/list/pages?size=${size}`);
+      return response.data;
   }
 };
 

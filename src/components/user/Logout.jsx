@@ -1,17 +1,27 @@
-// LogoutButton.js
 import React from 'react';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../../context/AuthContext';
+import { Navigate, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
+const LogoutButton = styled.div`
+  text-decoration: underline;
+  cursor: pointer;
+  color: white;
+  &:hover {
+    color: #001327;
+  }
+`;
 
 const Logout = () => {
   const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    // 로그아웃 후 로그인 페이지로 리디렉션
-    window.location.href = '/';
+    navigate('/');
   };
 
-  return <button onClick={handleLogout}>로그아웃</button>;
+  return <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>;
 };
 
-export default LogoutButton;
+export default Logout;

@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../../icon/Logo.png';
 import AxiosApi from '../../api/Axios';
+import { useAuth } from '../../context/AuthContext';
+import { useState, useEffect } from 'react';
 
 const Container = styled.div`
   display: flex;
@@ -94,6 +96,7 @@ const SigninPage = () => {
   const [isIdValid, setIsIdValid] = useState(false);
   const [isPwdValid, setIsPwdValid] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth(); // useAuth를 통해 login 함수 가져오기
 
   useEffect(() => {
     if (localStorage.getItem('userId')) {
@@ -147,6 +150,7 @@ const SigninPage = () => {
       console.log('로그인 성공:', response.data);
       localStorage.setItem('userId', userId);
       alert(`${userId}님 환영합니다.`);
+      login(userId);
       navigate('/boardlist');
     } catch (error) {
       console.error('로그인 실패:', error.response ? error.response.data : error.message);

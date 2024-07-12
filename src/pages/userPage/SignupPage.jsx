@@ -192,7 +192,7 @@ const SignupPage = () => {
       return;
     }
     try {
-      const response = await AxiosApi.signup({ userId, password, name, tel });
+      const response = await AxiosApi.signup( userId, password, name, tel );
       console.log('회원가입 성공:', response.data);
       alert('회원가입에 성공했습니다.');
       navigate('/');

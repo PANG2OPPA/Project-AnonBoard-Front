@@ -5,11 +5,13 @@ import { useAuth } from '../context/AuthContext';
 const PrivateRoute = ({ element }) => {
   const { isAuthenticated } = useAuth();
 
+  console.log('isAuthenticated:', isAuthenticated);
+
   if (!isAuthenticated) {
-    alert('로그인이 필요한 서비스입니다.');
+    return <Navigate to="/" replace />;
   }
 
-  return isAuthenticated ? element : <Navigate to="/" />;
+  return element;
 };
 
 export default PrivateRoute;
