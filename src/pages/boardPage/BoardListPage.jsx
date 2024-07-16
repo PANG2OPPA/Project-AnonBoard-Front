@@ -23,7 +23,9 @@ const TableHeader = styled.thead`
   color: white;
 `;
 
-const TableRow = styled.tr``;
+const TableRow = styled.tr`
+  cursor: pointer; /* 행에 커서 포인터 추가 */
+`;
 
 const TableCell = styled.td`
   padding: .5rem;
@@ -134,7 +136,6 @@ const BoardListPage = () => {
       try {
         const response = await AxiosApi.boardListByPage(currentPage, 20);
         setBoardData(response || []);
-        console.warn(boardData);
         setLoading(false);
       } catch (error) {
         console.error('게시판 데이터를 불러오는 데 실패했습니다.', error);
@@ -148,6 +149,10 @@ const BoardListPage = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
     setLoading(true);
+  };
+
+  const handleRowClick = (id) => {
+    navigate(`/board/detail/${id}`);
   };
 
   if (loading) {
@@ -166,28 +171,33 @@ const BoardListPage = () => {
       <Container>
         <Title>게시판</Title>
         
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableCell type="number">번호</TableCell>
-              <TableCell type="author">작성자</TableCell>
-              <TableCell type="title">제목</TableCell>
-              <TableCell type="date">날짜</TableCell>
-            </TableRow>
-          </TableHeader>
-          <tbody>
-            {boardData.map((post, index) => (
-              <TableRow key={post.id}>
-                <TableCell type="number">{post.id}</TableCell>
-                <TableCell type="author">{`익명${post.id}`}</TableCell>
-                <TableCell type="title">{post.title}</TableCell>
-                <TableCell type="date">{formatDate(post.regDate)}</TableCell>
+        {boardData.length === 0 ? (
+          <p>게시글이 없습니다. 게시글을 올려 사람들과 소통해보세요!</p>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableCell type="number">번호</TableCell>
+                <TableCell type="author">작성자</TableCell>
+                <TableCell type="title">제목</TableCell>
+                <TableCell type="date">날짜</TableCell>
               </TableRow>
-            ))}
-          </tbody>
-        </Table>
+            </TableHeader>
+            <tbody>
+              {boardData.map((post) => (
+                <TableRow key={post.id} onClick={() => handleRowClick(post.id)}>
+                  <TableCell type="number">{post.id}</TableCell>
+                  <TableCell type="author">{`익명${post.id}`}</TableCell>
+                  <TableCell type="title">{post.title}</TableCell>
+                  <TableCell type="date">{formatDate(post.regDate)}</TableCell>
+                </TableRow>
+              ))}
+            </tbody>
+          </Table>
+        )}
+
         <div style={{ width:'80%', display:'flex', justifyContent:'end', marginRight:'1.5rem'}}>
-        <WriteButton onClick={()=>navigate('/write')}>글쓰기</WriteButton>
+          <WriteButton onClick={() => navigate('/write')}>글쓰기</WriteButton>
         </div>
         
         <PaginationContainer>

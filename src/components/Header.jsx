@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Logout from './user/Logout';
 import logo from '../icon/Logo(white).png';
@@ -15,6 +15,7 @@ const HeaderContainer = styled.header`
 
 const Logo = styled.img`
   width: 150px;
+  cursor: pointer;
 `;
 
 const Nav = styled.nav`
@@ -38,6 +39,7 @@ const UserGreeting = styled.div`
 
 const Header = () => {
   const [userId, setUserId] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
@@ -46,9 +48,13 @@ const Header = () => {
     }
   }, []);
 
+  const handleLogoClick = () => {
+    navigate('/boardlist');
+  };
+
   return (
     <HeaderContainer>
-      <Logo src={logo} alt="AnonBoard 로고" />
+      <Logo src={logo} alt="AnonBoard 로고" onClick={handleLogoClick} />
       <Nav>
         {userId && <UserGreeting>{userId}님</UserGreeting>}
         <NavLink to="/mypage">마이페이지</NavLink>

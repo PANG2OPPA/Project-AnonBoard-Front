@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Layout from '../../components/Layout';
+import AxiosApi from '../../api/Axios';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const WriteContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 2rem;
-  background-color: #f8f9fa;
   min-height: 100vh;
 `;
 
@@ -81,28 +82,83 @@ const CancelButton = styled.button`
   &:hover {
     background-color: #e2e6ea;
   }
-`; 
+`;
+
+const Title = styled.h1`
+  font-size: 2rem;
+  color: #333;
+  text-align: center;
+  font-weight: bold;
+`;
 
 const WritePage = () => {
-  const handleSubmit = (e) => {
+  const { boardId } = useParams();
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const navigate = useNavigate();
+  const [isEdit, setIsEdit] = useState(false);
+
+  useEffect(() => {
+    if (boardId) {
+      setIsEdit(true);
+      // 게시글 데이터를 로드하여 초기값으로 설정
+      const fetchPostData = async () => {
+        try {
+          const response = await AxiosApi.getPostById(boardId);
+          setTitle(response.title);
+          setContent(response.content);
+        } catch (error) {
+          console.error('게시글을 불러오는 데 실패했습니다:', error);
+        }
+      };
+      fetchPostData();
+    }
+  }, [boardId]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // 글쓰기 제출 로직
+    const userId = localStorage.getItem('userId');
+    try {
+      if (isEdit) {
+        await AxiosApi.updatePost(boardId, title, userId, content);
+        alert('게시글이 성공적으로 수정되었습니다.');
+      } else {
+        await AxiosApi.writeBoard(title, userId, content);
+        alert('게시글이 성공적으로 작성되었습니다.');
+      }
+      navigate('/boardlist');
+    } catch (error) {
+      console.error('게시글 처리 중 오류가 발생했습니다:', error);
+      alert('게시글 처리 중 오류가 발생했습니다.');
+    }
   };
 
   const handleCancel = () => {
-    // 취소 로직
+    navigate('/boardlist');
   };
 
   return (
     <Layout>
-    <WriteContainer>
-      <WriteForm onSubmit={handleSubmit}>
-        <TitleInput type="text" placeholder="제목을 입력하세요" required />
-        <ContentTextarea placeholder="내용을 입력하세요" required />
-        <SubmitButton type="submit">작성하기</SubmitButton>
-        <CancelButton type="button" onClick={handleCancel}>취소</CancelButton>
-      </WriteForm>
-    </WriteContainer>
+      <Title>{isEdit ? '게시글 수정' : '게시글 작성'}</Title>
+      <WriteContainer>
+        <WriteForm onSubmit={handleSubmit}>
+          <TitleInput
+            type="text"
+            placeholder="제목을 입력하세요"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+          <ContentTextarea
+            placeholder="내용을 입력하세요"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            required
+          />
+          <SubmitButton type="submit">{isEdit ? '수정하기' : '작성하기'}</SubmitButton>
+          <CancelButton type="button" onClick={handleCancel}>취소</CancelButton>
+        </WriteForm>
+      </WriteContainer>
     </Layout>
   );
 };

@@ -7,6 +7,8 @@ import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './util/PrivateRoute';
 import BoardListPage from './pages/boardPage/BoardListPage';
 import WritePage from './pages/boardPage/BoardWritePage';
+import BoardDetailPage from './pages/boardPage/BoardDetailPage';
+import MyPage from './pages/userPage/MyPage'; // MyPage 컴포넌트 import
 
 const App = () => {
   return (
@@ -18,6 +20,9 @@ const App = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/boardlist" element={<PrivateRoute element={<BoardListPage />} />} />
           <Route path="/write" element={<PrivateRoute element={<WritePage />} />} />
+          <Route path="/board/detail/:boardId" element={<PrivateRoute element={<BoardDetailPage />} />} />
+          <Route path="/board/modify/:boardId" element={<PrivateRoute element={<WritePage />} />} />
+          <Route path="/mypage" element={<PrivateRoute element={<MyPage />} />} /> {/* 마이페이지 경로 추가 */}
         </Routes>
       </Router>
     </AuthProvider>
@@ -25,4 +30,3 @@ const App = () => {
 };
 
 export default App;
-
